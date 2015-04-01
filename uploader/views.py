@@ -42,34 +42,38 @@ def handle_uploaded_file(f):
 def merge_files(output_name):
     import os
     
+    files = os.listdir('/var/www/uploads/files/')
+    final_files = []
+    for i, the_file in enumerate(files):
+        if the_file.endswith('.csv') and not the_file.endswith('-values.csv'): # only accept csv files
+            final_files.append('/var/www/uploads/files/{}'.format(the_file))
+    
     try:
-        files = os.listdir('/var/www/uploads/files/')
-        print 'original files: {}'.format(files)
-        final_files = []
-        for i, the_file in enumerate(files):
-            if the_file.endswith('.csv') and not the_file.endswith('-values.csv'): # only accept csv files
-                final_files.append('/var/www/uploads/files/{}'.format(the_file))
-    
-        print 'making MergeSpreadsheet object...'
         dg = MergeSpreadsheet()
-    
-        print 'getting all scores...'
-        dAllCombos = dg.getAllScores(final_files)
-    
-        print 'grouping...'
-        lsMerged,lsAlone = dg.doGrouping(dAllCombos)
-    
-        print 'removing old files...'
-        for the_file in final_files:
-            if os.path.isfile(the_file):
-                os.remove(the_file)
+    except Exception as e:
+        print 'Exception in MergeSpreadsheet(): {}'.format(e)
 
-        print 'writing...'
+    try:
+        dAllCombos = dg.getAllScores(final_files)
+    except Exception as e:
+        print 'Exception in getAllScores(): {}'.format(e)
+
+    try:
+        lsMerged,lsAlone = dg.doGrouping(dAllCombos)
+    except Exception as e:
+        print 'Exception in doGrouping(): {}'.format(e)
+
+    for the_file in final_files:
+        try:
+            if os.path.isfile(the_file):
+                os.unlink(the_file)
+        except Exception as e:
+            print 'Exception when unlinking file: {}'.format(e)
+
+    try:
         dg.writeSpreadsheet(lsMerged,lsAlone, output_name)
     except Exception as e:
-        print 'merge_files Exception: {}'.format(e)
-    print 'final files: {}'.format(final_files)
-    print 'original files: {}'.format(files)
+        print 'Exception in writeSpreadsheet: {}'.format(e)
 
     return
 
