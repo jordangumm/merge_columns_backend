@@ -328,7 +328,7 @@ class MergeSpreadsheet:
     
     def writeSpreadsheet(self,lsMerged,lsAlone, output_name):
         print 'writing master spreadsheet'
-        export_file = open('output/{}-values.csv'.format(output_name), 'w+')
+        export_file = open('/var/www/uploads/files/{}-values.csv'.format(output_name), 'w+')
         max_num = max([len(x.lsOrigColumnValues) for x in lsMerged] + [len(x.lsOrigColumnValues) for x in lsAlone])
     
         for i in xrange(max_num+2):
@@ -355,16 +355,3 @@ class MergeSpreadsheet:
                         export_file.write(',')
             export_file.write('\n')
         export_file.close()
-   
-if __name__ == '__main__': 
-    import sys
-    
-    lsSpreadsheets = sys.argv
-    lsSpreadsheets = ['/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/2010_04_11 Chung 197 CEL clinical_NO ID.csv','/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/Califano_44-HNSCCs&25-Normal_Update-1.csv']
-    
-    dg = MergeSpreadsheet()
-    dAllCombos = dg.getAllScores(lsSpreadsheets)
-    lsMerged,lsAlone = dg.doGrouping(dAllCombos)
-    dg.writeSpreadsheet(lsMerged,lsAlone)
-    
-    

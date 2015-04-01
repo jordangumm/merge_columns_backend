@@ -12,7 +12,7 @@ import atexit
 import copy
 import re
 #from paths import *
-PATH_TO_DICTIONARY_WORDS='/Users/jordangumm/Dropbox/Inbox/cmu/gra/django_uploader/uploader/AutomaticClusterLabels/inData/2of12inf.txt'
+PATH_TO_DICTIONARY_WORDS='/home/gumm1jn/merge_columns_backend/uploader/AutomaticClusterLabels/inData/2of12inf.txt'
 
 try:
     import hashlib

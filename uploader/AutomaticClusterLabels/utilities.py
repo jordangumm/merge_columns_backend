@@ -4,7 +4,7 @@ from math import sqrt
 import pyUtilities as pyU
 
 dAbbrev = None
-dAbbrev = json.loads(open('./uploader/AutomaticClusterLabels/inData/medical_abbrevs.txt').read())
+dAbbrev = json.loads(open('/home/gumm1jn/merge_columns_backend/uploader/AutomaticClusterLabels/inData/medical_abbrevs.txt').read())
 
 lsStopWords = ['date','stage','status','age']
 

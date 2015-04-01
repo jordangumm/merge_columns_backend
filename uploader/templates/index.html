@@ -73,6 +73,8 @@
         <script language="javascript">
         Dropzone.options.myDropzone = {
             autoProcessQueue : false,
+            parallelUploads: 10,
+
 
             init: function() {
                 var submitButton = document.querySelector("#submit-all");
@@ -96,7 +98,7 @@
                     //alert(typeof outputName);
                     if (outputName != undefined && outputName != '') {
                         //alert("outputName if fine.");
-                        jQuery.getJSON('/process', {output_name: outputName}, function (data) {
+                        jQuery.getJSON('/uploader/process', {output_name: outputName}, function (data) {
                             if (data == 'Success') {
                                 window.location.href = "https://cps-xena.cps.cmich.edu/mergecolumns/#" + outputName;
                             } else {

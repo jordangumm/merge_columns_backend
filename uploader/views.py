@@ -32,51 +32,61 @@ def index(request):
 
 def handle_uploaded_file(f):
     print 'handling uploaded file...'
-    with open('files/{}'.format(f.name), 'wb+') as destination:
-        for chunk in f.chunks():
-            destination.write(chunk)
- 
+    try:
+        with open('/var/www/uploads/files/{}'.format(f.name), 'wb+') as destination:
+            for chunk in f.chunks():
+                destination.write(chunk)
+    except Exception as e:
+        print 'handle_uploaded_file: {}'.format(e)
       
 def merge_files(output_name):
     import os
     
-    files = os.listdir('files/')
-    final_files = []
-    for i, the_file in enumerate(files):
-        if the_file.endswith('.csv'): # only accept csv files
-            final_files.append('files/{}'.format(the_file))
+    try:
+        files = os.listdir('/var/www/uploads/files/')
+        print 'original files: {}'.format(files)
+        final_files = []
+        for i, the_file in enumerate(files):
+            if the_file.endswith('.csv') and not the_file.endswith('-values.csv'): # only accept csv files
+                final_files.append('/var/www/uploads/files/{}'.format(the_file))
     
-    print 'making MergeSpreadsheet object...'
-    dg = MergeSpreadsheet()
-    print files
+        print 'making MergeSpreadsheet object...'
+        dg = MergeSpreadsheet()
     
-    print 'getting all scores...'
-    dAllCombos = dg.getAllScores(final_files)
+        print 'getting all scores...'
+        dAllCombos = dg.getAllScores(final_files)
     
-    print 'grouping...'
-    lsMerged,lsAlone = dg.doGrouping(dAllCombos)
+        print 'grouping...'
+        lsMerged,lsAlone = dg.doGrouping(dAllCombos)
     
-    print 'writing...'
-    dg.writeSpreadsheet(lsMerged,lsAlone, output_name)
-    
-    print 'removing old files...'
-    for the_file in final_files:
-        if os.path.isfile(the_file):
-            os.remove(the_file)
-    
+        print 'removing old files...'
+        for the_file in final_files:
+            if os.path.isfile(the_file):
+                os.remove(the_file)
+
+        print 'writing...'
+        dg.writeSpreadsheet(lsMerged,lsAlone, output_name)
+    except Exception as e:
+        print 'merge_files Exception: {}'.format(e)
+    print 'final files: {}'.format(final_files)
+    print 'original files: {}'.format(files)
+
     return
 
 
 def process_files(request):
-    print 'processing files...'
-    output_name = request.GET['output_name']
+    try:
+        print 'processing files...'
+        output_name = request.GET['output_name']
     
-    print 'merging files...'
-    merge_files(output_name)
+        print 'merging files...'
+        merge_files(output_name)
     
-    print 'returning...'
-    return json_response(['Success'], 'upload')
-    
+        print 'returning...'
+        return json_response(['Success'], 'upload')
+    except Exception as e:
+        print 'process_files Exception: {}'.format(e)
+        return json_response(['Failure'], 'upload')
     
     
     
