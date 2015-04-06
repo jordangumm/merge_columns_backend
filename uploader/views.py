@@ -57,6 +57,7 @@ def merge_files(output_name):
         dAllCombos = dg.getAllScores(final_files)
     except Exception as e:
         print 'Exception in getAllScores(): {}'.format(e)
+        print 'files: {}'.format(final_files)
 
     try:
         lsMerged,lsAlone = dg.doGrouping(dAllCombos)
