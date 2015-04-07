@@ -33,7 +33,7 @@ class LabelClass:
         #orig name from spreadsheet
         self.strOrigText=name
         #after "cleaning"
-        self.strTextAfterChanges=""
+        self.strTextAfterChanges=name
         
         #original column values
         self.lsOrigColumnValues=[]
@@ -134,7 +134,7 @@ class LabelClass:
         #             
         
         #resolve abbreviations if possible
-        for text in sTemp.split():
+        for text in sTemp.strip().split():
             print text
             lsTemp,isAbbrev = util.getAbbrev(text.lower())
             print 'text'
@@ -144,7 +144,7 @@ class LabelClass:
             if lsTemp:
                 self.dAbbrevLabel[text] = lsTemp
                 strNew = strNew + ' ' + lsTemp[0]
-            elif lsTemp==None and isAbbrev==False:
+            elif lsTemp==None:
                 strNew = strNew + ' ' + text.lower()
             else:
                 self.dAbbrevLabel[text] = None
