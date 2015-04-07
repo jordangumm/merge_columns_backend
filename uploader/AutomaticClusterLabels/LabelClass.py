@@ -176,8 +176,8 @@ class LabelClass:
         try:
             for word in text.split():
                 #stem here
-                word2 = stemmer.stem(word)
-                if len(word2) == 1:
+                wordStem = stemmer.stem(word)
+                if len(wordStem) == 1:
                     continue
                 try:
                     lsRet =  cc.getColls(word,'')
@@ -185,8 +185,15 @@ class LabelClass:
                     print ex
                     print word
                     continue
+                #get one more level
+                lsRetMore = []
+                for word2 in lsRet:
+                    lsRet2 = cc.getColls(word2,'')
+                    lsRetMore.extend(lsRet2)
+                    lsRet.extend(lsRetMore)
                 lsRet2 = [stemmer.stem(word3) for word3 in lsRet]
-                dRet[word2] = lsRet2
+                lsRet2 = list(set(lsRet2))
+                dRet[wordStem] = lsRet2
                 #self.dCollocates[word2] = lsRet2
         except Exception as e:
             print 'getColls2 Exception: {}'.format(e)
