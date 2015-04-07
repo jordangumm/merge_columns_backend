@@ -26,22 +26,22 @@ class CollClass:
 
         #is part of speech is a noun
         #if pos.find("NN") > -1:# and not re.match(verbRE,word):
-               sqlStr = "Select MI,word1 from collocate_1 where word2='%s' and pos2='n' and pos1 = 'j'" % word;
+               sqlStr = "Select MI,word1 from collocate_1 where word2='" + word + "' and pos2='n' and pos1 = 'j';"
                self.cursor.execute(sqlStr)
                rows2 = self.cursor.fetchall()
                lsWords2 = self.sortByMI(rows2)
-               sqlStr = "Select MI,word1 from collocate_1 where word2='%s' and pos2='n' and pos1 = 'v'" % word;
+               sqlStr = "Select MI,word1 from collocate_1 where word2='" + word + "' and pos2='n' and pos1 = 'v';"
                self.cursor.execute(sqlStr)
                rows2 = self.cursor.fetchall()
                lsWords1 = self.sortByMI(rows2)   
                lsWords1.extend(lsWords2)
        #elif pos.find("JJ") > -1:
-               sqlStr = "Select MI,word2 from collocate_1 where word1='%s' and pos1 = 'j' and pos2='n'" % word;
+               sqlStr = "Select MI,word2 from collocate_1 where word1='" + word + "' and pos1 = 'j' and pos2='n';"
                self.cursor.execute(sqlStr)
                rows2 = self.cursor.fetchall()
                lsWords2 = self.sortByMI(rows2)
         #elif pos.find('VB') > -1: #or re.match(verbRE,word):
-               sqlStr = "Select MI,word2 from collocate_1 where word1='%s' and pos2='n' and pos1 = 'v'" % word;
+               sqlStr = "Select MI,word2 from collocate_1 where word1='" + word + "' and pos2='n' and pos1 = 'v';"
                #print sqlStr
                self.cursor.execute(sqlStr)
                rows2 = self.cursor.fetchall()
