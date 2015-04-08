@@ -14,22 +14,6 @@ class CollClass:
         self.conn = mdb.connect('localhost', 'root', 'stuff0645', 'COCA_collocates');
         #print self.conn
         self.cursor = self.conn.cursor(mdb.cursors.DictCursor)
-        
-    
-    def sortByMI(self,rows):
-        
-        lsMI = [d['MI'] for d in rows]
-        try:
-            lsWords = [d['word1'] for d in rows]
-        except Exception:
-            lsWords = [d['word2'] for d in rows]
-            
-        lsSort = zip(lsMI,lsWords)
-        sorted(lsSort)
-
-        lsMI = [ls[0] for ls in lsSort]
-        lsWords = [ls[1] for ls in lsSort]
-        return lsWords[1:6]
     
 
     def getColls(self,word,pos):
@@ -68,7 +52,21 @@ class CollClass:
         #else:
                #return []
        
-    #sorts by mutual information and returns top 5 collocates
+    #sorts by mutual information and returns top 5 collocates    
+    def sortByMI(self,rows):
+        
+        lsMI = [d['MI'] for d in rows]
+        try:
+            lsWords = [d['word1'] for d in rows]
+        except Exception:
+            lsWords = [d['word2'] for d in rows]
+            
+        lsSort = zip(lsMI,lsWords)
+        sorted(lsSort)
+
+        lsMI = [ls[0] for ls in lsSort]
+        lsWords = [ls[1] for ls in lsSort]
+        return lsWords[1:6]
         
    
 #if __name__ == '__main__':  
