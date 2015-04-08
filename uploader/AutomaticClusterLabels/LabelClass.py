@@ -181,24 +181,22 @@ class LabelClass:
                 print '{} of {} words'.format(word, len(text.split()))
                 #stem here
                 wordStem = stemmer.stem(word)
-                if len(wordStem) == 1:
-                    continue
-                    
-                try:
-                    lsRet =  cc.getColls(word,'')
-                except Exception as e:
-                    print 'Exception while setting lsRet: {}'.format(e)
-                    print word
-                #get one more level
-                lsRetMore = []
-                for word2 in lsRet:
-                    #print '{} of {} word2s'.format(word2, len(lsRet))
-                    lsRet2 = cc.getColls(word2,'')
-                    lsRetMore.extend(lsRet2)
-                    lsRet.extend(lsRetMore)
-                lsRet2 = [stemmer.stem(word3) for word3 in lsRet]
-                lsRet2 = list(set(lsRet2))
-                dRet[wordStem] = lsRet2
+                if len(wordStem) > 1:
+                    try:
+                        lsRet =  cc.getColls(word,'')
+                    except Exception as e:
+                        print 'Exception while setting lsRet: {}'.format(e)
+                        print word
+                    #get one more level
+                    lsRetMore = []
+                    for word2 in lsRet:
+                        #print '{} of {} word2s'.format(word2, len(lsRet))
+                        lsRet2 = cc.getColls(word2,'')
+                        lsRetMore.extend(lsRet2)
+                        lsRet.extend(lsRetMore)
+                    lsRet2 = [stemmer.stem(word3) for word3 in lsRet]
+                    lsRet2 = list(set(lsRet2))
+                    dRet[wordStem] = lsRet2
                 #self.dCollocates[word2] = lsRet2
         except Exception as e:
             print 'getColls2 Exception: {}'.format(e)
