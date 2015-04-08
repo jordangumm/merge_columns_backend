@@ -175,6 +175,7 @@ class LabelClass:
         
         try:
             for word in text.split():
+                print '{} of {} words'.format(word, len(text.split()))
                 #stem here
                 wordStem = stemmer.stem(word)
                 if len(wordStem) == 1:
@@ -189,6 +190,7 @@ class LabelClass:
                 #get one more level
                 lsRetMore = []
                 for word2 in lsRet:
+                    #print '{} of {} word2s'.format(word2, len(lsRet))
                     lsRet2 = cc.getColls(word2,'')
                     lsRetMore.extend(lsRet2)
                     lsRet.extend(lsRetMore)
