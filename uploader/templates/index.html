@@ -95,6 +95,8 @@
                 var myDropzone = this;
 
                 submitButton.addEventListener("click", function() {
+                    var outputName = $('#output_name').val();
+                    
                     if (outputName != undefined && outputName != '') {
                         myDropzone.processQueue();
                     } else {
