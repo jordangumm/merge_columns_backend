@@ -181,7 +181,11 @@ class LabelClass:
                 print '{} of {} words'.format(word, len(text.split()))
                 #stem here
                 wordStem = stemmer.stem(word)
+                print 'fart'
+                
                 if len(wordStem) > 1:
+                    print '{} of {} wordstems'.format(wordStem, len(text.split()))
+                    
                     try:
                         lsRet =  cc.getColls(word,'')
                     except Exception as e:
