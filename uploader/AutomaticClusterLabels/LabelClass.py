@@ -2,9 +2,9 @@ import utilities as util
 import pyUtilities as pyU
 from CollClass import CollClass
 import nltk
-from nltk import stem
+from nltk.stem.porter import *
 
-stemmer = stem.PorterStemmer()
+stemmer = PorterStemmer()
 
 class LabelClass:
     
@@ -178,13 +178,12 @@ class LabelClass:
                 lsRet = []
                 lsRet2 = []
 
-                print '{} of {} words'.format(word, len(text.split()))
+                #print '{} of {} words'.format(word, len(text.split()))
                 #stem here
-                wordStem = stemmer.stem(word)
-                print 'fart'
-                
+                wordStem = stemmer.stem([word])
+
                 if len(wordStem) > 1:
-                    print '{} of {} wordstems'.format(wordStem, len(text.split()))
+                    #print '{} of {} wordstems'.format(wordStem, len(wordStem))
                     
                     try:
                         lsRet =  cc.getColls(word,'')
