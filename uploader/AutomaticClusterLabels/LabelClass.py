@@ -175,6 +175,8 @@ class LabelClass:
         
         try:
             for word in text.split():
+                lsRet = []
+                lsRet2 = []
                 #stem here
                 wordStem = stemmer.stem(word)
                 if len(wordStem) == 1:
@@ -185,7 +187,6 @@ class LabelClass:
                 except Exception as e:
                     print 'Exception while setting lsRet: {}'.format(e)
                     print word
-                    lsRet = []
                 #get one more level
                 lsRetMore = []
                 for word2 in lsRet:
