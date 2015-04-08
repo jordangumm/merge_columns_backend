@@ -2,9 +2,9 @@ import utilities as util
 import pyUtilities as pyU
 from CollClass import CollClass
 import nltk
-from nltk.stem.porter import *
+from nltk import stem
 
-stemmer = PorterStemmer()
+stemmer = stem.PorterStemmer()
 
 class LabelClass:
     
@@ -113,8 +113,7 @@ class LabelClass:
         self.dCollocatesOther = dRet
             
     def cleanUp(self,word):
-        print 'cleanUp word: {}'.format(word)
-        
+
         strNew=""
         sTemp = pyU.removePunctuation(word,lsExcept=["=",'-','+'])
         sTemp = util.splitOnWord(sTemp,"date")
@@ -123,9 +122,7 @@ class LabelClass:
         sTemp = util.splitOnWord(sTemp,"ID")
         sTemp = util.splitOnNumbers(sTemp)
         sTemp = sTemp.lower()
-        
-        print 'word after cleanup: {}'.format(sTemp)
-        
+
         # #get abbreviations in values:
         #         for text in self.lsOrigColumnValuesSet:
         #             lsTemp = util.getAbbrev(text.lower()):
@@ -135,16 +132,12 @@ class LabelClass:
         
         #resolve abbreviations if possible
         for text in sTemp.strip().split():
-            print text
             lsTemp,isAbbrev = util.getAbbrev(text.lower())
-            print 'text'
-            
-            print 'word: {}     isAbbrev: {}'.format(lsTemp, isAbbrev)
-            
+
             if lsTemp:
                 self.dAbbrevLabel[text] = lsTemp
                 strNew = strNew + ' ' + lsTemp[0]
-            elif lsTemp==None:
+            elif lsTemp==None: #and isAbbrev==False:
                 strNew = strNew + ' ' + text.lower()
             else:
                 self.dAbbrevLabel[text] = None
@@ -154,57 +147,36 @@ class LabelClass:
     #clean up label, includes splitting on certain words,
     #getting rid of certain punctuation, cleaning up abbreviations  
     def cleanLabel(self,label=True):
-        print 'cleanLabel'
-        print 'getValueMapping'
         self.getValueMapping()
-        print 'clean up original text'
         strNew = self.cleanUp(self.strOrigText)
-        print 'clean equiv label'
         strNew = util.cleanEquivLabel(strNew)
-        print 'set new string'
         self.strTextAfterChanges = strNew
     
     def getColls2(self,text):
-        print 'getColls2'
-        cc = None
-        dRet = {}
-        try:
-            cc = CollClass()
-        except Exception as e:
-            print 'CollClass creation Exception: {}'.format(e)
-        
-        try:
-            for word in text.split():
-                lsRet = []
-                lsRet2 = []
-
-                #print '{} of {} words'.format(word, len(text.split()))
-                #stem here
-                wordStem = stemmer.stem([word])
-
-                if len(wordStem) > 1:
-                    #print '{} of {} wordstems'.format(wordStem, len(wordStem))
-                    
-                    try:
-                        lsRet =  cc.getColls(word,'')
-                    except Exception as e:
-                        print 'Exception while setting lsRet: {}'.format(e)
-                        print word
-                    #get one more level
-                    lsRetMore = []
-                    for word2 in lsRet:
-                        #print '{} of {} word2s'.format(word2, len(lsRet))
-                        lsRet2 = cc.getColls(word2,'')
-                        lsRetMore.extend(lsRet2)
-                        lsRet.extend(lsRetMore)
-                    lsRet2 = [stemmer.stem(word3) for word3 in lsRet]
-                    lsRet2 = list(set(lsRet2))
-                    dRet[wordStem] = lsRet2
-                #self.dCollocates[word2] = lsRet2
-        except Exception as e:
-            print 'getColls2 Exception: {}'.format(e)
-
-        print 'return getColls2'
+        cc = CollClass()
+        dRet={}
+        for word in text.split():
+            #stem here
+            wordStem = stemmer.stem(word)
+            if len(wordStem) == 1:
+                continue
+            try:
+                lsRet =  cc.getColls(word,'')
+            except Exception,ex:
+                print ex
+                print word
+                continue
+            #get one more level
+            lsRetMore = []
+            for word2 in lsRet:
+                lsRet2 = cc.getColls(word2,'')
+                lsRetMore.extend(lsRet2)
+                
+            lsRet.extend(lsRetMore)
+            lsRet2 = [stemmer.stem(word3) for word3 in lsRet]
+            lsRet2 = list(set(lsRet2))
+            dRet[wordStem] = lsRet2
+            #self.dCollocates[word2] = lsRet2
         return dRet
 
     #get collocates of all words in the label
@@ -306,3 +278,29 @@ class LabelClass:
         retString += "\nCollocates Other:" + str(self.dCollocatesOther)
         #retString = retString + "\nOrig Values: " + ','.join([val for val in self.strOrigColumnValues])    
         return retString + "\n\n"
+        
+if __name__ == '__main__':
+    lc = LabelClass('Sex','stuff')
+    lc.cleanLabel()
+    print lc.strOrigText
+    print lc.strTextAfterChanges
+    lc.getCollsLabel()
+    print lc.dCollocates
+    
+    lc2 = LabelClass('gender','stuff')
+    lc2.cleanLabel()
+    print lc2.strOrigText
+    print lc2.strTextAfterChanges
+    lc2.getCollsLabel()
+    print lc2.dCollocates
+    
+    for lsWord in lc2.dCollocates.values():
+        for word in lsWord:
+            if word in lc.dCollocates.values()[0]:
+                print 'FOUND'
+                print word
+    
+    
+    #lc.getColls()
+            
+        

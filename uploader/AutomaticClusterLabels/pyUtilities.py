@@ -11,8 +11,11 @@ import threading
 import atexit
 import copy
 import re
+import pySettings as pySet
 #from paths import *
-PATH_TO_DICTIONARY_WORDS='/home/gumm1jn/merge_columns_backend/uploader/AutomaticClusterLabels/inData/2of12inf.txt'
+
+PATH_TO_DICTIONARY_WORDS=pySet.DATA_PATH + '2of12inf.txt'
+
 
 try:
     import hashlib
@@ -2219,11 +2222,7 @@ def bIsDictionaryWordWiki(word):
 
 
 def bIsDictionaryWord(sWord):
-    print 'using bIsDictionaryWord script...'
     assert dDictWords, 'COULDNT LOAD DICTIONARY WORD LIST AT %s' % (PATH_TO_DICTIONARY_WORDS)
-    print 'fart'
-    temp = sWord.lower() in dDictWords
-    print temp
     return sWord.lower() in dDictWords
 
 def bIsProfanity(sWord):

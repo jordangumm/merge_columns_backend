@@ -46,16 +46,20 @@ class MergeSpreadsheet:
             
         return lsRetLabel
 
-    def getAllScores(self,new_spreadsheets):
+    def getAllScores(self,lsSpreadsheets):
             
-        rs = ReadSpreadsheets()
-        rs.readSpreadsheets(new_spreadsheets)
+        rs = ReadSpreadsheets() 
+        
+        for f1 in lsSpreadsheets:
+            rs.addSpreadsheet(f1)
         
          # rs.addSpreadsheet('/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/2010_04_11 Chung 197 CEL clinical_NO ID.csv')
         #        rs.addSpreadsheet('/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/Califano_44-HNSCCs&25-Normal_Update-1.csv')
         #        rs.addSpreadsheet('/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/Rickman.csv')
         #        rs.addSpreadsheet('/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/SampleInformationFile.OralCavity-MDACC.csv')
         #        rs.addSpreadsheet('/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/Winter\'s.csv')
+        print 'reading spreadsheets'
+        rs.readSpreadsheets()
 
         dAllCombos = {}
         # dAll2 = {}
@@ -189,7 +193,7 @@ class MergeSpreadsheet:
         # assign each label a number
         # add this for easy lookup
         # dGrouping={}
-        print 'merging spreadsheets...'
+        print 'merging spreadsheets'
         lsGroupingAll = []
         for spread1, dTemp2 in dCombos.items():
             for spread2, dTemp in dTemp2.items():
@@ -218,7 +222,7 @@ class MergeSpreadsheet:
                 for j in range(0, i):
                     lsInner = []
                     for k in range (0, j + 1):
-                        lsInner.append(0)
+                        lsInner.append(0) 
                     lsMatrix.append(lsInner)
             
                 # fill in matrix with cos
@@ -232,12 +236,9 @@ class MergeSpreadsheet:
                         else:
                             lsMatrix[index2][index1] = cos
        
-            
                 lsGrouping = self.findMaxGroup(lsMatrix, dNumsRev)
                 lsGroupingAll.append(lsGrouping)
 
-        
-        
         # look through all combos of labels in different spreadsheets
         lsMerged = []
         lsAlone = []
@@ -322,7 +323,7 @@ class MergeSpreadsheet:
             print "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
             print ""
     
-    def writeSpreadsheet(self,lsMerged,lsAlone, output_name):
+    def writeSpreadsheet(self,lsMerged,lsAlone,output_name):
         print 'writing master spreadsheet'
         export_file = open('/var/www/uploads/files/{}-values.csv'.format(output_name), 'w+')
         max_num = max([len(x.lsOrigColumnValues) for x in lsMerged] + [len(x.lsOrigColumnValues) for x in lsAlone])
@@ -351,3 +352,18 @@ class MergeSpreadsheet:
                         export_file.write(',')
             export_file.write('\n')
         export_file.close()
+   
+if __name__ == '__main__': 
+    import sys
+    
+    lsSpreadsheets = sys.argv
+    lsSpreadsheets = ['/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/2010_04_11 Chung 197 CEL clinical_NO ID.csv','/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/Califano_44-HNSCCs&25-Normal_Update-1.csv']
+    lsSpreadsheets = ['/home/gandy1l/AutomaticClusterLabels/SampleAnnotations/HNSCC/GSE3292.csv','/home/gandy1l/AutomaticClusterLabels/SampleAnnotations/HNSCC/GSE6791.csv']
+    dg = MergeSpreadsheet()
+    dAllCombos = dg.getAllScores(lsSpreadsheets)
+    lsMerged,lsAlone = dg.doGrouping(dAllCombos)
+
+    print [lc.strTextAfterChanges for lc in lsMerged]
+
+    
+    

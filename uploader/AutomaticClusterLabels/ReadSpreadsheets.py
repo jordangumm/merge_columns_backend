@@ -3,19 +3,20 @@ from SpreadsheetClass import SpreadsheetClass
 import os
 
 class ReadSpreadsheets:
-
-    def __init__(self):
-        self.lsSpreadsheets = []
-        self.lsSpreadsheetObjs = []    
+    
+    lsSpreadsheets=[]
+    lsSpreadsheetObjs = []
+    
+    
+    def addSpreadsheet(self,strFile):
+        self.lsSpreadsheets.append(strFile)
     
     #read all spreadsheets, creating appropriate SpreadSheet class
-    def readSpreadsheets(self, new_spreadsheets):
-        self.lsSpreadsheets = new_spreadsheets
-
+    def readSpreadsheets(self):
+        
         for fileName in self.lsSpreadsheets:
             fRead = csv.reader(open(fileName,'rU'))#,dialect="excel-tab")
             lsRows = fRead.next()
-            print 'labels: {}'.format(lsRows)
             
             sc = SpreadsheetClass(fileName)
             self.lsSpreadsheetObjs.append(sc)
@@ -30,9 +31,27 @@ class ReadSpreadsheets:
             sc.detLabelOrder()
             #sc.findAbbreviations()  
             #clean stuff up as much as possible (put abbrev detection here?)
-            try:
-                sc.cleanLabels()
-            except Exception as e:
-                print 'Exception in cleanLabels(): {}'.format(e)
+            print 'cleaning up spreadsheet'
+            sc.cleanLabels()
+            print 'still cleaning up spreadsheet'
             sc.determineColumnType()
+            print 'still cleaning up spreadsheet 2'
             sc.getColls()
+            #print sc
+
+if __name__ == '__main__':
+    
+    #strDir = '/Users/lisa/Desktop/geoDatasets/renalCancer/GPL570/'
+    
+    rs = ReadSpreadsheets() 
+    #for myFile in os.listdir(strDir):
+        #rs.addSpreadsheet(strDir + myFile)
+    
+    rs.addSpreadsheet('/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/2010_04_11 Chung 197 CEL clinical_NO ID.csv')
+    rs.addSpreadsheet('/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/Califano_44-HNSCCs&25-Normal_Update-1.csv')
+    #rs.addSpreadsheet('/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/Rickman.csv')
+    #rs.addSpreadsheet('/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/SampleInformationFile.OralCavity-MDACC.csv')
+    #rs.addSpreadsheet('/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/Winter\'s.csv')
+    rs.readSpreadsheets()
+        
+        

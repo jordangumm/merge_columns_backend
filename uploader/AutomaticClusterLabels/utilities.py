@@ -2,9 +2,11 @@ import json
 import re
 from math import sqrt
 import pyUtilities as pyU
+import pySettings as pySet
 
 dAbbrev = None
-dAbbrev = json.loads(open('/home/gumm1jn/merge_columns_backend/uploader/AutomaticClusterLabels/inData/medical_abbrevs.txt').read())
+
+dAbbrev = json.loads(open(pySet.DATA_PATH + 'medical_abbrevs.txt').read())
 
 lsStopWords = ['date','stage','status','age']
 
@@ -150,35 +152,26 @@ def splitOnNumbers(sTemp):
 
 
 def getAbbrev(abbrev): 
-    print 'populating abbrev helpers for word: {}'.format(abbrev)
-    
-    lsIgnore=['bm','cm','c','b','n/a','n\a','p','st','nd','rd','on','or','post','at','id','no','vs','all','m']
-    dOther={'etoh':'alcohol','pos':'positive','lfu':'last follow up','on fu':'on follow up','w':'white','o':'other','oc':'oral cavity','op':'oropharynx','hp':'hypopharynx','xrt':'radiation therapy','oct':'optimal cutting temperature','ffpe':'formula fixed paraffin embedded','ln':'lymph node','pyr':'pack years','doc':'died of other causes','dod':'died of disease','ned':'no evidence of disease','awd':'alive with disease','f':'female','cn':'clinical n','pn':'pathological lymph node','tx':'treatment','loc':'local','dt':'date','path':'pathological','mrn':'medical record number','chemo':'chemotherapy','dxt':'deep x ray therapy','clin':'clinical','sur':'surgery','cgh':'comparative genome hybridization','rtpcr':'reverse transcriptase polymerase chain reaction','rx':'treatment','tnm':'tumor node metastases','ish':'in situ hybridization','pcr':'polymerase chain reaction','t':'tumor','n':'lymph node','od':'of','stat':'status','dx':'diagnosis','diff':'differentiation','rec':'recurrence','recc':'recurrence','fu':'follow up'}
+	lsIgnore=['bm','cm','c','b','n/a','n\a','p','st','nd','rd','on','or','post','at','id','no','vs','all','m']
 	
-    print 'processing abbrev...'
-    if abbrev in lsIgnore:
-        print 'abbrev in lsIgnore'
-        return None,False
+	dOther={'etoh':'alcohol','pos':'positive','lfu':'last follow up','on fu':'on follow up','w':'white','o':'other','oc':'oral cavity','op':'oropharynx','hp':'hypopharynx','xrt':'radiation therapy','oct':'optimal cutting temperature','ffpe':'formula fixed paraffin embedded','ln':'lymph node','pyr':'pack years','doc':'died of other causes','dod':'died of disease','ned':'no evidence of disease','awd':'alive with disease','f':'female','cn':'clinical n','pn':'pathological lymph node','tx':'treatment','loc':'local','dt':'date','path':'pathological','mrn':'medical record number','chemo':'chemotherapy','dxt':'deep x ray therapy','clin':'clinical','sur':'surgery','cgh':'comparative genome hybridization','rtpcr':'reverse transcriptase polymerase chain reaction','rx':'treatment','tnm':'tumor node metastases','ish':'in situ hybridization','pcr':'polymerase chain reaction','t':'tumor','n':'lymph node','od':'of','stat':'status','dx':'diagnosis','diff':'differentiation','rec':'recurrence','recc':'recurrence','fu':'follow up'}
 	
-    if abbrev in dOther:
-        print 'abbrev in dOther'
-        return [dOther[abbrev]],True
+	if abbrev in lsIgnore:
+		return None,False
 	
-    if abbrev in dAbbrev.keys():
-        print 'abbrev in dAbbrev.keys()'
-        return dAbbrev[abbrev],True
-    else:
-        print 'determine if abbrev or not'
+	if abbrev in dOther:
+		return [dOther[abbrev]],True
+	
+	if abbrev in dAbbrev.keys():
+		return dAbbrev[abbrev],True
+	else:
 		#determine if abbrev or not
-        if len(abbrev) < 4:
-            print 'len of abbrev less than 4'
-            return None,True
-        elif not pyU.bIsDictionaryWord(abbrev):
-            print 'is not a dictionary word'
-            return None,True
-        else:
-            print 'does not match a thing!'
-            return None,False
+		if len(abbrev) < 4:
+		    return None,True
+		elif not pyU.bIsDictionaryWord(abbrev):
+		    return None,True
+		else:
+		    return None,False
 		
 	
 def split_words(instring, prefix = '', words = None):

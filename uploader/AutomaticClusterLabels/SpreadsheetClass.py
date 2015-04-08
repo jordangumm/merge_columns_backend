@@ -57,14 +57,9 @@ class SpreadsheetClass:
     
     #clean all labels           
     def cleanLabels(self):
-        print 'clean labels...'
-        #print 'dLabels: {}'.format(self.dLabels.items())
-        for key, lsObj in self.dLabels.items():
-            print 'clean label'
-            print 'lsObj: {}'.format(lsObj)
+        
+        for key,lsObj in self.dLabels.items():
             lsObj.cleanLabel()
-            print 'done cleaning label'
-        print 'done cleaning labels...'
             #print lsObj
     
     def printAbbrevs(self):
@@ -73,13 +68,9 @@ class SpreadsheetClass:
                 
     #get collocates for all labels
     def getColls(self):
-        print 'get colls label'
         for key,lsObj in self.dLabels.items():
-            print 'before: {}'.format(lsObj)
             lsObj.getCollsLabel()
-            print 'after: {}'.format(lsObj)
         
-        print 'get colls value col'
         for key,lsObj in self.dLabels.items():
             lsObj.getCollsValueCol()
     

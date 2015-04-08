@@ -1,5 +1,6 @@
 import pymysql as mdb
 import re
+import pySettings as pySet
 
 class CollClass:
     
@@ -11,13 +12,17 @@ class CollClass:
             self.getNewConnect()
             
     def getNewConnect(self):
-        self.conn = mdb.connect('localhost', 'root', 'stuff0645', 'COCA_collocates');
+        
+        if pySet.PRODUCTION_V == False:
+            self.conn = mdb.connect('localhost', 'root', 'stuff0645', 'COCA_coll2');
+        else:
+            self.conn = mdb.connect('localhost', 'root', 'stuff0645', 'COCA_collocates');
         #print self.conn
         self.cursor = self.conn.cursor(mdb.cursors.DictCursor)
     
-
     def getColls(self,word,pos):
-               #if single character
+               #print 'GETTING DB' + word
+        #if single character
                if len(word)==1:
                     return []
                     
@@ -26,7 +31,7 @@ class CollClass:
 
         #is part of speech is a noun
         #if pos.find("NN") > -1:# and not re.match(verbRE,word):
-               sqlStr = "Select MI,word1 from collocate_1 where word2='" + word + "' and pos2='n' and pos1 = 'j';"
+               sqlStr = "Select MI,word1 from collocate_1 where word2='" + word + "' and pos2='n' and pos1 = 'j';" 
                self.cursor.execute(sqlStr)
                rows2 = self.cursor.fetchall()
                lsWords2 = self.sortByMI(rows2)
@@ -69,7 +74,8 @@ class CollClass:
         return lsWords[1:6]
         
    
-#if __name__ == '__main__':  
-#    cc = CollClass()
-#    cc.getNewConnect();     
-#    print cc.getColls('acid','NN');
+if __name__ == '__main__':  
+    cc = CollClass()
+    cc.getNewConnect();     
+    print cc.getColls('sex','V');
+    print cc.getColls('gender','')
