@@ -95,7 +95,12 @@
                 var myDropzone = this;
 
                 submitButton.addEventListener("click", function() {
-                    myDropzone.processQueue();
+                    if (outputName != undefined && outputName != '') {
+                        myDropzone.processQueue();
+                    } else {
+                        alert("You must enter an output file name!");
+                        window.location.href = "https://cps-xena.cps.cmich.edu/uploader"
+                    }
                     // Tell Dropzone to process all queued files.
                 });
 
