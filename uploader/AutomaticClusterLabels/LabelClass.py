@@ -179,12 +179,13 @@ class LabelClass:
                 wordStem = stemmer.stem(word)
                 if len(wordStem) == 1:
                     continue
+                    
                 try:
                     lsRet =  cc.getColls(word,'')
-                except Exception,ex:
-                    print ex
+                except Exception as e:
+                    print 'Exception while setting lsRet: {}'.format(e)
                     print word
-                    continue
+                    lsRet = []
                 #get one more level
                 lsRetMore = []
                 for word2 in lsRet:
