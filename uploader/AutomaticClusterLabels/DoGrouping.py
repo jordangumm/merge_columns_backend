@@ -4,6 +4,7 @@ import utilities as utils
 import pickle
 from LabelClass import *
 import copy
+import pySettings as pySet
 
 MIN_COSINE = 0.6
 
@@ -32,18 +33,10 @@ class MergeSpreadsheet:
 
     def getAllScores(self,lsSpreadsheets):
             
-        rs = ReadSpreadsheets() 
+        rs = ReadSpreadsheets()
         
-        for f1 in lsSpreadsheets:
-            rs.addSpreadsheet(f1)
-        
-         # rs.addSpreadsheet('/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/2010_04_11 Chung 197 CEL clinical_NO ID.csv')
-        #        rs.addSpreadsheet('/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/Califano_44-HNSCCs&25-Normal_Update-1.csv')
-        #        rs.addSpreadsheet('/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/Rickman.csv')
-        #        rs.addSpreadsheet('/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/SampleInformationFile.OralCavity-MDACC.csv')
-        #        rs.addSpreadsheet('/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/Winter\'s.csv')
         print 'reading spreadsheets'
-        rs.readSpreadsheets()
+        rs.readSpreadsheets(lsSpreadsheets)
 
         dAllCombos = {}
         # dAll2 = {}
@@ -314,7 +307,7 @@ class MergeSpreadsheet:
     
     def writeSpreadsheet(self,lsMerged,lsAlone,output_name):
         print 'writing master spreadsheet'
-        export_file = open('/var/www/uploads/files/{}-values.csv'.format(output_name), 'w+')
+        export_file = open(pySet.OUTPUT_PATH + '{}-values.csv'.format(output_name), 'w+')
 
         max_num = max([len(x.lsOrigColumnValues) for x in lsMerged] + [len(x.lsOrigColumnValues) for x in lsAlone])
     
@@ -323,7 +316,7 @@ class MergeSpreadsheet:
                 if i==0:
                     export_file.write('{},{},'.format(label.strOrigText,label.mergedText))
                 elif i==1:
-                    export_file.write('{},,'.format(label.strSpreadsheetName))
+                    export_file.write('{},,'.format(label.strSpreadsheetName.split("/")[-1]))
                 else:
                     try:
                         export_file.write('{},,'.format(label.lsOrigColumnValues[i-2]))
@@ -332,16 +325,30 @@ class MergeSpreadsheet:
         
             for label in lsAlone:
                 if i==0:
-                    export_file.write('{},'.format(label.strOrigText))
+                    export_file.write('{},{},'.format(label.strOrigText,label.strOrigText))
                 elif i==1:
-                    export_file.write('{},'.format(label.strSpreadsheetName))
+                    export_file.write('{},,'.format(label.strSpreadsheetName.split("/")[-1]))
                 else:
                     try:
-                        export_file.write('{},'.format(label.lsOrigColumnValues[i-2]))
+                        export_file.write('{},,'.format(label.lsOrigColumnValues[i-2]))
                     except:
-                        export_file.write(',')
+                        export_file.write(',,')
             export_file.write('\n')
         export_file.close()
+   
+if __name__ == '__main__': 
+    import sys
+    
+    lsSpreadsheets = sys.argv
+    #lsSpreadsheets = ['/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/2010_04_11 Chung 197 CEL clinical_NO ID.csv','/Users/lisa/Desktop/AutomaticClusterLabels/Raw2/Califano_44-HNSCCs&25-Normal_Update-1.csv']
+    lsSpreadsheets = ['/Users/lisa/Desktop/AutomaticClusterLabels/SampleAnnotations/HNSCC/GSE3292.csv','/Users/lisa/Desktop/AutomaticClusterLabels/SampleAnnotations/HNSCC/GSE6791.csv']
+    dg = MergeSpreadsheet()
+    dAllCombos = dg.getAllScores(lsSpreadsheets)
+    lsMerged,lsAlone = dg.doGrouping(dAllCombos)
+
+    print [lc.strTextAfterChanges for lc in lsMerged]
+    print [lc.strTextAfterChanges for lc in lsAlone]
+    dg.writeSpreadsheet(lsMerged,lsAlone,'output.csv')
 
     
     
