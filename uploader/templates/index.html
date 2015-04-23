@@ -202,8 +202,11 @@
         };
         
         jQuery(document).ready(function() {
+            var box;
             
-            box = new ajaxLoader($('.box-loader'));
+            $('.submit-all').click(function() {
+                box = new ajaxLoader($('.box-loader'));
+            });
             
         });
         </script>
