@@ -25,7 +25,6 @@
             top:50px;}
         .box-loader {
           position: relative;
-          overflow: hidden;
           width: 100%;
           height: 100%;
         }
@@ -34,17 +33,17 @@
   </head>
 
   <body>
-      <div class="box-loader">
-          <!-- HEADER -->
-          <nav class="navbar navbar-inverse navbar-fixed-top">
-              <div class="container-fluid">
-                  <div class="navbar-header">
-                      <a class="navbar-brand" href="#">
-                          Uploader
-                      </a>
-                  </div>
+      <!-- HEADER -->
+      <nav class="navbar navbar-inverse navbar-fixed-top">
+          <div class="container-fluid">
+              <div class="navbar-header">
+                  <a class="navbar-brand" href="#">
+                      Uploader
+                  </a>
               </div>
-          </nav>
+          </div>
+      </nav>
+      <div class="box-loader">
           <div class="container">
               <div class="form-group">
                   <label id="output_name_title">Output Name</label>
@@ -89,6 +88,7 @@
               </div>
           </div>
       </div>
+  </body>
       
       <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
       <!--[if lt IE 9]>
@@ -211,5 +211,4 @@
         });
         </script>
 
-  </body>
 </html>
