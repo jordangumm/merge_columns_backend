@@ -2,4 +2,4 @@
 
 #### A sample of my GRA work
 
-A django web-app pipeline for processing csv files to pass to MergeColumns Cappuccino web-app.
+A django web-app for processing csv files to pass to MergeColumns Cappuccino web-app.
